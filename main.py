@@ -13,13 +13,13 @@ if st.button('예상 질문 생성'):
     with st.spinner('질문 생성 중입니다...예상 10초?!'):
         recomendq = chat_model.predict(person +"에 대해서" + jobdescription + "채용공고의 내용을 기반으로 1분동안 답변할만한 면접관의 질문 1개를 만들어줘")
         st.write('예상질문 :',recomendq)
-        question = recomendq
+    question = recomendq
 else:
     st.write('질문을 입력하세요')
     question = st.text_input('면접관 질문')
 
 st.text('답변을 입력하세요')
-answer = st.text_area('답변 입력')
+answer = st.text_input('답변 입력')
 
 if st.button('분석 시작'):
     with st.spinner('답변 분석 중입니다...최대 1분?!'):
