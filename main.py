@@ -26,8 +26,7 @@ if st.session_state.show_questions:
     st.write('예상질문:', recomendq)
 
 if st.session_state.show_answer_input:
-    
-    question = st.text_input('면접관 질문', value=recomendq if st.session_state.show_questions else "")
+    question = st.text_input('면접관 질문', value=st.session_state.recomendq if st.session_state.show_questions else "")
     st.text('답변을 입력하세요')
     answer = st.text_area('답변 입력')
 
