@@ -8,7 +8,7 @@ if 'show_questions' not in st.session_state:
 if 'show_answer_input' not in st.session_state:
     st.session_state.show_answer_input = True
 if 'recomendq' not in st.session_state:
-    st.session_state.recomendq = ""
+    st.session_state.recomendq = "기본 예상 질문" #초기값
 
 
 st.title('AI 커뮤니케이션 코치 스픽스')
@@ -18,7 +18,7 @@ jobdescription = st.text_input('채용공고')
 
 if st.button('예상 질문 생성'):
     with st.spinner('질문 생성 중입니다...예상 10초?!'):
-        recomendq = chat_model.predict(person +"에 대해서" + jobdescription + "채용공고의 내용을 기반으로 1분동안 답변할만한 면접관의 질문 1개를 만들어줘")
+        st.session_state.recomendq = chat_model.predict(person +"에 대해서" + jobdescription + "채용공고의 내용을 기반으로 1분동안 답변할만한 면접관의 질문 1개를 만들어줘")
         st.session_state.show_questions = True
         st.session_state.show_answer_input = True
 
