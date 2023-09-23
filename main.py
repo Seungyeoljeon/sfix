@@ -19,7 +19,7 @@ else:
     question = st.text_input('면접관 질문')
 
 st.text('답변을 입력하세요')
-answer = st.text_area()
+answer = st.text_area('답변 입력')
 
 if st.button('분석 시작'):
     with st.spinner('답변 분석 중입니다...최대 1분?!'):
