@@ -6,7 +6,7 @@ chat_model = ChatOpenAI()
 if 'show_questions' not in st.session_state:
     st.session_state.show_questions = False
 if 'show_answer_input' not in st.session_state:
-    st.session_state.show_answer_input = False
+    st.session_state.show_answer_input = True
 
 
 st.title('AI 커뮤니케이션 코치 스픽스')
@@ -25,9 +25,10 @@ if st.session_state.show_questions:
 
 if st.session_state.show_answer_input:
     st.write('질문을 입력하세요')
-    question = st.text_input('면접관 질문')
+    question = st.text_input('면접관 질문', value=recomendq if st.session_state.show_questions else "")
     st.text('답변을 입력하세요')
     answer = st.text_area('답변 입력')
+
     if st.button('분석 시작'):
         with st.spinner('답변 분석 중입니다...최대 1분?!'):
             result = chat_model.predict(person + "이" + question + "에 대한 질문에 대해서 답변으로" + answer +"을 1분 동안 했다. 이 면접 연습에 대해서 커뮤니케이션 코치로 질문에 대한 지원자의 답변에 대해서 질문 의도, 답변 길이, 개선 답변을 제시한다.개선 답변은 [직무역량], [구체적인경험], [방안과 결과], [정리] 내용을 포함한다.")
@@ -37,4 +38,4 @@ else:
 
 if st.button("리셋"):
     st.session_state.show_questions = False
-    st.session_state.show_answer_input = False
+    st.session_state.show_answer_input = True
