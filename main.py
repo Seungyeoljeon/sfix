@@ -21,7 +21,7 @@ if st.button('예상 질문 생성'):
         st.session_state.show_questions = True
         st.session_state.show_answer_input = True
 
-# 예상 질문 표시
+# 예상 질문 표시 
 if st.session_state.show_questions:
     st.write('예상질문:', st.session_state.recomendq)
 
