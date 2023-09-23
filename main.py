@@ -7,6 +7,8 @@ if 'show_questions' not in st.session_state:
     st.session_state.show_questions = False
 if 'show_answer_input' not in st.session_state:
     st.session_state.show_answer_input = True
+if 'recomendq' not in st.session_state:
+    st.session_state.recomendq = ""
 
 
 st.title('AI 커뮤니케이션 코치 스픽스')
@@ -21,7 +23,7 @@ if st.button('예상 질문 생성'):
         st.session_state.show_answer_input = True
 
 if st.session_state.show_questions:
-    st.write('예상질문:', recomendq)
+    st.write('예상질문:', st.session_state.recomendq)
 
 if st.session_state.show_answer_input:
     st.write('질문을 입력하세요')
@@ -39,3 +41,4 @@ else:
 if st.button("리셋"):
     st.session_state.show_questions = False
     st.session_state.show_answer_input = True
+    st.session_state.recomendq = ""
