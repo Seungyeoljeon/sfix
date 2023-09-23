@@ -23,7 +23,7 @@ if st.button('예상 질문 생성'):
         st.session_state.show_answer_input = True
 
 if st.session_state.show_questions:
-    st.write('예상질문:', st.session_state.recomendq)
+    st.write('예상질문:', recomendq)
 
 if st.session_state.show_answer_input:
     
