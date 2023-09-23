@@ -15,6 +15,7 @@ if 'show_answer_input' not in st.session_state:
     st.session_state.show_answer_input = True
 if 'recomendq' not in st.session_state:
     st.session_state.recomendq = "기본 예상 질문" #초기값
+    
 
 person = st.text_area('지원자 설명')
 jobdescription = st.text_area('채용공고')
