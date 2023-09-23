@@ -15,7 +15,6 @@ st.title('AI 커뮤니케이션 코치 스픽스')
 person = st.text_input('지원자 설명')
 jobdescription = st.text_input('채용공고')
 
-
 if st.button('예상 질문 생성'):
     with st.spinner('질문 생성 중입니다...예상 10초?!'):
         st.session_state.recomendq = chat_model.predict(person +"에 대해서" + jobdescription + "채용공고의 내용을 기반으로 1분동안 답변할만한 면접관의 질문 1개를 만들어줘")
