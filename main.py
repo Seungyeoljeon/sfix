@@ -2,7 +2,6 @@ import streamlit as st
 from langchain.chat_models import ChatOpenAI
 chat_model = ChatOpenAI()
 
-
 st.title('AI 커뮤니케이션 코치 스픽스!')
 st.caption('입력 예시 입니다.')
 st.caption('지원자 설명 :저는 컴퓨터 공학을 전공한 신입 개발자입니다. 학교에서는 Python과 Java를 사용하여 여러 프로젝트를 진행했습니다. 또한, 오픈 소스 프로젝트에 참여하여 실제 문제를 해결하는 경험을 했습니다. 팀워크와 커뮤니케이션 능력을 중요하게 생각하며, 늘 새로운 것을 배우고 성장하려고 노력합니다.')
