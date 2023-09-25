@@ -1,6 +1,6 @@
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
-chat_model = ChatOpenAI()
+chat_model = ChatOpenAI(model="gpt-4")
 
 st.title('AI 커뮤니케이션 코치 스픽스!')
 st.caption('입력 예시 입니다.')
