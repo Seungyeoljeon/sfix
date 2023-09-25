@@ -23,7 +23,7 @@ description = st.text_area('상황 설명')
 
 if st.button('예상 질문 생성'):
     with st.spinner('질문 생성 중입니다...예상 10초?!'):
-        st.session_state.recomendq = chat_model.predict(person +"에 대해서" + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개를 만들어줘")
+        st.session_state.recomendq = chat_model.predict(person +"에 대해서" + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개와 예상 답변을 만들어줘")
         st.session_state.show_questions = True
         st.session_state.show_answer_input = True
 
@@ -38,7 +38,7 @@ if st.session_state.show_answer_input:
 
     if st.button('분석 시작'):
         with st.spinner('답변 분석 중입니다...최대 1분?!'):
-            result = chat_model.predict("이용자가" +person + "와" + description + "을 바탕으로" + question + "에 대해" + answer + "으로 답변했습니다. 이 답변에 대해 명확성, 구조화, 적절한 길이, 문법과 언어 사용, 감정의 표현, 컨텍스트 이해, 그리고 응용 및 예시 사용의 관점에서 분석해주세요. 그리고 답변 개선 안을 보여주세요.")
+            result = chat_model.predict("이용자가" +person + "와" + description + "을 바탕으로" + question + "에 대해" + answer + "으로 답변했습니다. 이 답변에 대해 명확성, 구조화, 적절한 길이, 문법과 언어 사용, 감정의 표현, 컨텍스트 이해, 그리고 응용 및 예시 사용의 관점에서 분석해주세요." +  "위 답변에 대해서 답변 개선 안을 보여주세요.")
             st.write('위 질문에 대한 모범 답변은?', result)
 else:
     st.write('모범답변을 받으려면 클릭')
