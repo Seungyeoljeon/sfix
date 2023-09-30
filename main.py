@@ -1,6 +1,11 @@
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
-chat_model = ChatOpenAI(model="gpt-4")
+from langchain.llms import CTransformers
+# chat_model = ChatOpenAI(model="gpt-4")
+llm = CTransformers(
+    model="llama-2-7b-chat.ggmlv3.q2_K.bin",
+    model_type="llama"
+)
 
 st.title('AI 커뮤니케이션 코치 스픽스!!')
 st.caption('입력 예시 입니다.')
@@ -15,7 +20,7 @@ if 'show_answer_input' not in st.session_state:
     st.session_state.show_answer_input = True
 if 'recomendq' not in st.session_state:
     st.session_state.recomendq = "기본 예상 질문" #초기값
-    
+
 
 person = st.text_area('자기 소개')
 description = st.text_area('상황 설명')
@@ -23,11 +28,11 @@ description = st.text_area('상황 설명')
 
 if st.button('예상 질문 생성'):
     with st.spinner('질문 생성 중입니다...예상 10초?!'):
-        st.session_state.recomendq = chat_model.predict(person +"에 대해서" + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개와 예상 답변을 만들어줘")
+        st.session_state.recomendq = llm.predict(person +"에 대해서" + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개와 예상 답변을 만들어줘")
         st.session_state.show_questions = True
         st.session_state.show_answer_input = True
 
-# 예상 질문 표시 
+# 예상 질문 표시
 if st.session_state.show_questions:
     st.write('예상질문:', st.session_state.recomendq)
 
