@@ -10,6 +10,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
+from langchain.chains.llm import LLMChain
 import tempfile
 import os
 from streamlit_extras.buy_me_a_coffee import button
