@@ -101,7 +101,7 @@ if uploaded_file is not None:
     data = Chroma.from_documents(texts,embeddings_model)
 
     st.header("자기소개서로 질문만들기")
-    st.write(data)
+    st.write(texts)
 
 
     if st.button('자기소개서 기반 질문 생성'):  
