@@ -96,8 +96,8 @@ if uploaded_file is not None:
     docs = chain.run(texts)
     
     st.write("자기소개서 요약", docs)
-    persona='docs'
-
+    persona=docs
+    st.write(persona)
     # load it into Chroma
     
     data = Chroma.from_documents(documents=persona, embedding_function=chat_model)
