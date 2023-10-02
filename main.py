@@ -101,48 +101,33 @@ if uploaded_file is not None:
     # chain = load_summarize_chain(chat_model, chain_type="stuff")
     # docs = chain.run(texts)
     
+
+    #자기소개서 요약
     st.header("자기소개서 요약")
- 
+    with st.spinner('잠시만 기다려주세요...'):
+        # Define prompt
+        prompt_template = """아래 내용에 대한 간략한 요약을 한국어로 제공하세요:
+        "{text}"
+        요약:"""
+        prompt = PromptTemplate.from_template(prompt_template)
 
+        # Define LLM chain
+        llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
+        llm_chain = LLMChain(llm=llm, prompt=prompt)
 
-    # Define prompt
-    prompt_template = """아래 내용에 대한 간략한 요약을 한국어로 제공하세요:
-    "{text}"
-    요약:"""
-    prompt = PromptTemplate.from_template(prompt_template)
+        # Define StuffDocumentsChain
+        stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
+        summary=stuff_chain.run(texts)
+        st.write(summary)
+        
 
-    # Define LLM chain
-    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
-    llm_chain = LLMChain(llm=llm, prompt=prompt)
+        if st.button('자기소개서 기반 질문 생성'):  
 
-    # Define StuffDocumentsChain
-    stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
-    summary=stuff_chain.run(texts)
-    st.write(summary)
-    
-    #Split2
-    text_splitter2 = RecursiveCharacterTextSplitter(
-    # Set a really small chunk size, just to show.
-        chunk_size = 50,
-        chunk_overlap  = 10,
-        length_function = len,
-        is_separator_regex = False,
-    )
-
-
-    splited_summary = text_splitter2.split_documents(summary)
-    
-    #load it into Chroma
-    data2 = Chroma.from_documents(splited_summary,embeddings_model)
-
-
-    if st.button('자기소개서 기반 질문 생성'):  
-
-        with st.spinner('잠시만 기다려주세요...'):
-                personaq ="면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
-                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data2.as_retriever())
-                result = qa_chain({"query" : personaq})
-                st.write(result["result"])
+            with st.spinner('잠시만 기다려주세요...'):
+                    personaq ="면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
+                    qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
+                    result = qa_chain({"query" : personaq})
+                    st.write(result["result"])
 
 
 # 초기 세션 상태 설정
