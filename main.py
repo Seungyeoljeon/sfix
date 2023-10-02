@@ -101,12 +101,12 @@ if uploaded_file is not None:
     # load it into Chroma
     db = Chroma.from_documents(persona, embeddings_model)
 
-    persona_question = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
-
+    
     if st.button('자기소개서 기반 질문 생성'):
         with st.spinner('잠시만 기다려주세요...'):
-                qa_chat_model = MultiQueryRetriever.from_chat_model(retriever=db.as_retriever(), chat_model=chat_model)
-                result = qa_chat_model(query = persona_question)
+                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=db.as_retriever())
+                qa_chain({"query": question})
+                result = qa_chain(query = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요")
                 st.write(result["result"])
 
 # 초기 세션 상태 설정
