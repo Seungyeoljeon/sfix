@@ -91,24 +91,23 @@ if uploaded_file is not None:
 
     embeddings_model = OpenAIEmbeddings()
     
-    # # summurize texts
-    # chain = load_summarize_chain(chat_model, chain_type="stuff")
-    # docs = chain.run(texts)
-    
-    # st.write("자기소개서 요약", docs)
-    
+   
     #load it into Chroma
     data = Chroma.from_documents(texts,embeddings_model)
 
-    st.header("자기소개서로 질문만들기")
-    st.write(texts)
+        # summurize texts
+    chain = load_summarize_chain(chat_model, chain_type="stuff")
+    docs = chain.run(texts)
+    
+    st.header("자기소개서 요약")
+    st.write(docs)
 
 
     if st.button('자기소개서 기반 질문 생성'):  
 
         with st.spinner('잠시만 기다려주세요...'):
                 personaq ="면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
-                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
+                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=docs.as_retriever())
                 result = qa_chain({"query" : personaq})
                 st.write(result["result"])
 
