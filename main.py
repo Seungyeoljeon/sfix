@@ -1,11 +1,11 @@
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import CTransformers
-# chat_model = ChatOpenAI(model="gpt-4")
-llm = CTransformers(
-    model="llama-2-7b-chat.ggmlv3.q2_K.bin",
-    model_type="llama"
-)
+chat_model = ChatOpenAI(model="gpt-4")
+# llm = CTransformers(
+#     model="llama-2-7b-chat.ggmlv3.q2_K.bin",
+#     model_type="llama"
+# )
 
 st.title('AI 커뮤니케이션 코치 스픽스!!')
 st.caption('입력 예시 입니다.')
