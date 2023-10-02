@@ -108,7 +108,7 @@ if uploaded_file is not None:
             qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=db.as_retriever())
             result = qa_chain({"query": question})
             st.write(result["result"])
-    else
+    else:
         None
 
 # 초기 세션 상태 설정
