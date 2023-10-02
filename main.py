@@ -98,7 +98,7 @@ if uploaded_file is not None:
     st.write(persona)
 
     # load it into Chroma
-    db = Chroma.from_documents(persona, embeddings_model)
+    db = Chroma.from_documents(documents=persona, chat_model=embeddings_model)
 
     
     if st.button('자기소개서 기반 질문 생성'):
