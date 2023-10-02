@@ -9,7 +9,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
-# from langchain.chains import RetrievalQA
+from langchain.chains import RetrievalQA
 import tempfile
 import os
 from streamlit_extras.buy_me_a_coffee import button
@@ -91,8 +91,14 @@ if uploaded_file is not None:
 
     st.write(pages)
     st.write(texts)
-else
-    text = "없음"
+
+    question = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
+
+    if st.button('자기소개서 기반 질문 생성'):
+        with st.spinner('잠시만 기다려주세요...'):
+            qa_chain = RetrievalQA.from_chain_type(chat_model,retriever=db.as_retriever())
+            result = qa_chain({"query": question})
+            st.write(result["result"])
 
 # 초기 세션 상태 설정
 if 'show_questions' not in st.session_state:
@@ -109,7 +115,7 @@ description = st.text_area('상황 설명')
 
 if st.button('예상 질문 생성'):
     with st.spinner('질문 생성 중입니다...예상 10초?!'):
-        st.session_state.recomendq = chat_model.predict(texts + "는" + person +"이 제출한 자기소개서이다." + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개와 예상 답변을 만들어줘")
+        st.session_state.recomendq = chat_model.predict(person +"은 제출된 자기소개서이다." + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개와 예상 답변을 만들어줘")
         st.session_state.show_questions = True
         st.session_state.show_answer_input = True
 
