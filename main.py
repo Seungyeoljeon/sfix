@@ -103,13 +103,11 @@ if uploaded_file is not None:
 
     question = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
 
-    if st.button('자기소개서 기반 질문 생성'):
-        with st.spinner('잠시만 기다려주세요...'):
+if st.button('자기소개서 기반 질문 생성'):
+    with st.spinner('잠시만 기다려주세요...'):
             qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=db.as_retriever())
             result = qa_chain({"query": question})
             st.write(result["result"])
-    else:
-        None
 
 # 초기 세션 상태 설정
 if 'show_questions' not in st.session_state:
