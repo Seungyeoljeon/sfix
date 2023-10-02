@@ -16,10 +16,12 @@ from streamlit_extras.buy_me_a_coffee import button
 import streamlit as st
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-
+from langchain.callbacks.base import BaseCallbackHandler
+from langchain.schema import AgentAction, AgentFinish, LLMResult
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 # from langchain.llms import CTransformers
-chat_model = ChatOpenAI(model="gpt-3.5-turbo")
+chat_model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[StreamingStdOutCallbackHandler()] )
 # llm = CTransformers(
 #     model="llama-2-7b-chat.ggmlv3.q2_K.bin",
 #     model_type="llama"
@@ -93,7 +95,7 @@ if uploaded_file is not None:
     chain = load_summarize_chain(chat_model)
     persona = chain.run(texts)
     st.write(persona)
-    
+
     # load it into Chroma
     db = Chroma.from_documents(documents=persona, embedding=embeddings_model)
 
@@ -106,6 +108,8 @@ if uploaded_file is not None:
             qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=db.as_retriever())
             result = qa_chain({"query": question})
             st.write(result["result"])
+    else
+        None
 
 # 초기 세션 상태 설정
 if 'show_questions' not in st.session_state:
