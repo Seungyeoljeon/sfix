@@ -34,7 +34,7 @@ class StreamHandler(BaseCallbackHandler):
 
 
 # from langchain.llms import CTransformers
-chat_model = ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0)
+chat_model = ChatOpenAI(model="gpt-4", temperature=0)
 # llm = CTransformers(
 #     model="llama-2-7b-chat.ggmlv3.q2_K.bin",
 #     model_type="llama"
