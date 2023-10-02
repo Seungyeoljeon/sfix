@@ -91,14 +91,16 @@ if uploaded_file is not None:
 
     embeddings_model = OpenAIEmbeddings()
     
-    # summurize texts
-    chain = load_summarize_chain(chat_model, chain_type="stuff")
-    docs = chain.run(texts)
+    # # summurize texts
+    # chain = load_summarize_chain(chat_model, chain_type="stuff")
+    # docs = chain.run(texts)
     
-    st.write("자기소개서 요약", docs)
+    # st.write("자기소개서 요약", docs)
     
     #load it into Chroma
-    data = Chroma.from_documents(docs,embeddings_model)
+    data = Chroma.from_documents(texts,embeddings_model)
+
+    streamlit.header("자기소개서로 질문만들기")
 
 
     if st.button('자기소개서 기반 질문 생성'):  
