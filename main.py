@@ -100,7 +100,7 @@ if uploaded_file is not None:
     db = Chroma.from_documents(docs, embedding_function=chat_model)
 
  
-    st.write("자기소개서 요약")
+    st.write("자기소개서 요약", docs)
     
     
     if st.button('자기소개서 기반 질문 생성'):
