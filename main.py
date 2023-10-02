@@ -92,7 +92,7 @@ if uploaded_file is not None:
     embeddings_model = OpenAIEmbeddings()
     
     # summurize texts
-    chain = load_summarize_chain(chat_model)
+    chain = load_summarize_chain(chat_model, chain_type="stuff")
     docs = chain.run(texts)
     
     st.write("자기소개서 요약", docs)
