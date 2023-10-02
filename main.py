@@ -1,6 +1,6 @@
-# __import__('pysqlite3')
-# import sys
-# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 #import
 from langchain.document_loaders import PyPDFLoader
@@ -91,24 +91,23 @@ if uploaded_file is not None:
 
     embeddings_model = OpenAIEmbeddings()
     
-    # # summurize texts
-    # chain = load_summarize_chain(chat_model, chain_type="stuff")
-    # docs = chain.run(texts)
+    # summurize texts
+    chain = load_summarize_chain(chat_model, chain_type="stuff")
+    docs = chain.run(texts)
     
-    # st.write("자기소개서 요약", docs)
-    # persona=docs
+    st.write("자기소개서 요약", docs)
     
     #load it into Chroma
-    data = Chroma.from_documents(texts,embeddings_model)
-    st.write(data)
+    data = Chroma.from_documents(docs,embeddings_model)
 
-    # if st.button('자기소개서 기반 질문 생성'):  
 
-    #     with st.spinner('잠시만 기다려주세요...'):
-    #             qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
-    #             result = qa_chain(query = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요")
-    #             st.write(result["result"])
-    # st.write("자기소개서 요약", docs)
+    if st.button('자기소개서 기반 질문 생성'):  
+
+        with st.spinner('잠시만 기다려주세요...'):
+                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
+                result = qa_chain(query = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요")
+                st.write(result["result"])
+
 
 # 초기 세션 상태 설정
 if 'show_questions' not in st.session_state:
