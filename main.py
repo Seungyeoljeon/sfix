@@ -31,6 +31,7 @@ st.caption('1. 컴퓨터 공학 또는 관련 분야의 학사 이상의 학위 
 #제목
 st.title("자기소개서")
 st.write("자기소개서 업로드시 상세한 분석이 가능합니다.")
+
 #uploader
 uploaded_file = st.file_uploader("자기소개서를 PDF 또는 TXT 파일로 업로드 해주세요",type=['pdf', 'txt'])
 st.write("___")
