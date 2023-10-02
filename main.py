@@ -15,6 +15,7 @@ import os
 from streamlit_extras.buy_me_a_coffee import button
 import streamlit as st
 from langchain.chains.summarize import load_summarize_chain
+from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 
 
 # from langchain.llms import CTransformers
@@ -88,12 +89,12 @@ if uploaded_file is not None:
 
     embeddings_model = OpenAIEmbeddings()
 
-    # summury tests
-    chain = load_summarize_chain(chat_model, chain_type="stuff")
-    persona = chain.run(texts)
+    # summury texts
+    stuff_chain = StuffDocumentsChain(chat_model)
+    persona = stuff_chain.run(texts)
 
     # load it into Chroma
-    db = Chroma.from_documents(persona, embeddings_model)
+    db = Chroma.from_documents(documents=persona, embedding=embeddings_model)
     st.write('자기소개서요약', persona)
 
     question = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
