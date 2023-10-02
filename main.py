@@ -18,7 +18,7 @@ from langchain.chains.summarize import load_summarize_chain
 
 
 # from langchain.llms import CTransformers
-chat_model = ChatOpenAI(model="gpt-3.5-turbo-16k")
+chat_model = ChatOpenAI(model="gpt-3.5-turbo")
 # llm = CTransformers(
 #     model="llama-2-7b-chat.ggmlv3.q2_K.bin",
 #     model_type="llama"
