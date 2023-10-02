@@ -97,9 +97,9 @@ if uploaded_file is not None:
     #load it into Chroma
     data = Chroma.from_documents(texts,embeddings_model)
 
-    # summurize texts
-    chain = load_summarize_chain(chat_model, chain_type="stuff")
-    docs = chain.run(texts)
+    # # summurize texts
+    # chain = load_summarize_chain(chat_model, chain_type="stuff")
+    # docs = chain.run(texts)
     
     st.header("자기소개서 요약")
  
@@ -115,9 +115,9 @@ if uploaded_file is not None:
     llm_chain = LLMChain(llm=llm, prompt=prompt)
 
     # Define StuffDocumentsChain
-    stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="texts")
-    
-    st.write(stuff_chain)
+    stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
+
+    st.write(stuff_chain.run(texts))
 
 
 
