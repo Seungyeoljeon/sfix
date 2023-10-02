@@ -149,15 +149,14 @@ if uploaded_file is not None:
         # Define StuffDocumentsChain
         stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
         summary=stuff_chain.run(texts)
-        st.write(summary)
-        
+                
 
         if st.button('자기소개서 기반 질문 생성'):  
 
             with st.spinner('잠시만 기다려주세요...'):
-                    personaq ="면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
+                    personaq ="위 자기소개서 요약을 읽고 면접관 입장에서 지원자에 대한 질문을 만들어주세요"
                     qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
-                    result = qa_chain({"query" : personaq})
+                    result = qa_chain({"query" : summary + personaq})
                     st.write(result["result"])
 
 
