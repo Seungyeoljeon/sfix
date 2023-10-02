@@ -92,7 +92,7 @@ if uploaded_file is not None:
     # summurize texts
     chain = load_summarize_chain(chat_model)
     persona = chain.run(texts)
-    print(persona)
+    st.write(persona)
     # # load it into Chroma
     # db = Chroma.from_documents(documents=persona, embedding=embeddings_model)
     # st.write('자기소개서요약', persona)
