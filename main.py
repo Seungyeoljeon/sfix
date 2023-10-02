@@ -106,8 +106,9 @@ if uploaded_file is not None:
     if st.button('자기소개서 기반 질문 생성'):  
 
         with st.spinner('잠시만 기다려주세요...'):
+                personaq ="면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
                 qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
-                result = qa_chain(query = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요")
+                result = qa_chain(query = personaq)
                 st.write(result["result"])
 
 
