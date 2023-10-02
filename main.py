@@ -88,10 +88,10 @@ if uploaded_file is not None:
 
     # load it into Chroma
     db = Chroma.from_documents(texts, embeddings_model)
-else:
-    texts = "없음"
 
 
+st.write(pages)
+st.write(texts)
 
 # 초기 세션 상태 설정
 if 'show_questions' not in st.session_state:
