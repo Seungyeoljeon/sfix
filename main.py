@@ -15,6 +15,7 @@ import os
 from streamlit_extras.buy_me_a_coffee import button
 import streamlit as st
 from langchain.chains.summarize import load_summarize_chain
+from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import AgentAction, AgentFinish, LLMResult
@@ -95,19 +96,36 @@ if uploaded_file is not None:
     #load it into Chroma
     data = Chroma.from_documents(texts,embeddings_model)
 
-        # summurize texts
+    # summurize texts
     chain = load_summarize_chain(chat_model, chain_type="stuff")
     docs = chain.run(texts)
     
     st.header("자기소개서 요약")
-    st.write(docs)
+ 
+
+    # Define prompt
+    prompt_template = """아래 내용에 대한 간략한 요약을 한국어로 제공하세요:
+    "{text}"
+    요약:"""
+    prompt = PromptTemplate.from_template(prompt_template)
+
+    # Define LLM chain
+    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
+    llm_chain = LLMChain(llm=llm, prompt=prompt)
+
+    # Define StuffDocumentsChain
+    stuff_chain = StuffDocumentsChain(
+        llm_chain=llm_chain, document_variable_name="texts"
+    )
+    st.write(stuff_chain)
+
 
 
     if st.button('자기소개서 기반 질문 생성'):  
 
         with st.spinner('잠시만 기다려주세요...'):
                 personaq ="면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
-                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=docs.as_retriever())
+                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
                 result = qa_chain({"query" : personaq})
                 st.write(result["result"])
 
