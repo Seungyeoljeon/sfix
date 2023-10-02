@@ -97,9 +97,10 @@ if uploaded_file is not None:
     
     st.write("자기소개서 요약", docs)
     persona=docs
+    
+    #load it into Chroma
     data = Chroma.from_documents(texts,embeddings_model)
-    if st.button('자기소개서 기반 질문 생성'):
-        load it into Chroma
+    if st.button('자기소개서 기반 질문 생성'):  
 
         with st.spinner('잠시만 기다려주세요...'):
                 qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
