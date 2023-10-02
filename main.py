@@ -120,8 +120,17 @@ if uploaded_file is not None:
     summary=stuff_chain.run(texts)
     st.write(summary)
     
+    #Split2
+    text_splitter2 = RecursiveCharacterTextSplitter(
+    # Set a really small chunk size, just to show.
+        chunk_size = 50,
+        chunk_overlap  = 10,
+        length_function = len,
+        is_separator_regex = False,
+    )
 
-    splited_summary = text_splitter.split_documents(summary)
+
+    splited_summary = text_splitter2.split_documents(summary)
     
     #load it into Chroma
     data2 = Chroma.from_documents(splited_summary,embeddings_model)
