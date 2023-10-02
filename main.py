@@ -28,7 +28,7 @@ description = st.text_area('상황 설명')
 
 if st.button('예상 질문 생성'):
     with st.spinner('질문 생성 중입니다...예상 10초?!'):
-        st.session_state.recomendq = llm.predict(person +"에 대해서" + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개와 예상 답변을 만들어줘")
+        st.session_state.recomendq = chat_model.predict(person +"에 대해서" + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개와 예상 답변을 만들어줘")
         st.session_state.show_questions = True
         st.session_state.show_answer_input = True
 
