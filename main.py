@@ -94,9 +94,6 @@ if uploaded_file is not None:
 
     # load it into Chroma
     db = Chroma.from_documents(persona, embeddings_model)
-
-    
-
     st.write('자기소개서요약', persona)
 
     question = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
