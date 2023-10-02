@@ -37,7 +37,6 @@ st.caption('상황 설명 : 아래 채용 공고를 읽고 면접을 가는 상�
 st.caption('1. 컴퓨터 공학 또는 관련 분야의 학사 이상의 학위 2. Python, Java에 대한 깊은 이해 3. Git과 같은 버전 관리 도구 사용 경험 4. 팀워크와 커뮤니케이션 능력 5. RESTful API 개발 경험 우대사항: 1. 클라우드 서비스(AWS, Azure 등) 사용 경험 2. CI/CD 파이프라인 구축 경험 ')
 
 #제목
-st.title("자기소개서")
 st.write("자기소개서 업로드시 상세한 분석이 가능합니다.")
 
 #uploader
@@ -107,7 +106,7 @@ if uploaded_file is not None:
                 qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=db.as_retriever())
                 qa_chain({"query": question})
                 result = qa_chain(query = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요")
-                st.write(result["result"])
+                st.write(result)
 
 # 초기 세션 상태 설정
 if 'show_questions' not in st.session_state:
