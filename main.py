@@ -94,18 +94,17 @@ if uploaded_file is not None:
     # summurize texts
     chain = load_summarize_chain(chat_model)
     docs = chain.run(texts)
+    
+    st.write("자기소개서 요약", docs)
 
     # load it into Chroma
     
-    db = Chroma.from_documents(docs, embedding_function=chat_model)
-
- 
-    st.write("자기소개서 요약", docs)
+    data = Chroma.from_documents(docs, embedding_function=chat_model)
     
     
     if st.button('자기소개서 기반 질문 생성'):
         with st.spinner('잠시만 기다려주세요...'):
-                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=db.as_retriever())
+                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
                 result = qa_chain(query = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요")
                 st.write(result["result"])
 
