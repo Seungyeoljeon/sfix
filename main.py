@@ -115,9 +115,8 @@ if uploaded_file is not None:
     llm_chain = LLMChain(llm=llm, prompt=prompt)
 
     # Define StuffDocumentsChain
-    stuff_chain = StuffDocumentsChain(
-        llm_chain=llm_chain, document_variable_name="texts"
-    )
+    stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="texts")
+    
     st.write(stuff_chain)
 
 
