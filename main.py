@@ -34,7 +34,7 @@ class StreamHandler(BaseCallbackHandler):
 
 
 # from langchain.llms import CTransformers
-chat_model = ChatOpenAI(model="gpt-4", temperature=0)
+chat_model = ChatOpenAI(model="gpt-3.5-turbo-16k", temperature=0)
 # llm = CTransformers(
 #     model="llama-2-7b-chat.ggmlv3.q2_K.bin",
 #     model_type="llama"
@@ -155,7 +155,7 @@ if uploaded_file is not None:
 
             with st.spinner('잠시만 기다려주세요...'):
                     personaq ="위 자기소개서 요약을 읽고 면접관 입장에서 지원자에 대한 질문을 만들어주세요"
-                    qa_chain = RetrievalQA.from_chain_type(llm_chain, retriever=data.as_retriever())
+                    qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
                     result = qa_chain({"query" : summary + personaq})
                     st.write(result["result"])
 
