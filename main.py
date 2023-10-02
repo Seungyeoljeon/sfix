@@ -1,6 +1,21 @@
-import streamlit as st
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+#import
+from langchain.document_loaders import PyPDFLoader
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
-from langchain.llms import CTransformers
+from langchain.chains import RetrievalQA
+import tempfile
+import os
+from streamlit_extras.buy_me_a_coffee import button
+import streamlit as st
+
+# from langchain.llms import CTransformers
 chat_model = ChatOpenAI(model="gpt-4")
 # llm = CTransformers(
 #     model="llama-2-7b-chat.ggmlv3.q2_K.bin",
@@ -12,6 +27,68 @@ st.caption('입력 예시 입니다.')
 st.caption('자기 소개 :저는 컴퓨터 공학을 전공한 신입 개발자입니다. 학교에서는 Python과 Java를 사용하여 여러 프로젝트를 진행했습니다. 또한, 오픈 소스 프로젝트에 참여하여 실제 문제를 해결하는 경험을 했습니다. 팀워크와 커뮤니케이션 능력을 중요하게 생각하며, 늘 새로운 것을 배우고 성장하려고 노력합니다.')
 st.caption('상황 설명 : 아래 채용 공고를 읽고 면접을 가는 상황입니다. 우리 회사는 역동적인 개발 팀을 구성하고 있습니다. 현재 Java와 Python을 주로 사용하는 웹 개발자를 찾고 있습니다. 필수 요건은 다음과 같습니다:')
 st.caption('1. 컴퓨터 공학 또는 관련 분야의 학사 이상의 학위 2. Python, Java에 대한 깊은 이해 3. Git과 같은 버전 관리 도구 사용 경험 4. 팀워크와 커뮤니케이션 능력 5. RESTful API 개발 경험 우대사항: 1. 클라우드 서비스(AWS, Azure 등) 사용 경험 2. CI/CD 파이프라인 구축 경험 ')
+
+#제목
+st.title("자기소개서")
+st.write("자기소개서 업로드시 상세한 분석이 가능합니다.")
+#uploader
+uploaded_file = st.file_uploader("자기소개서를 PDF 또는 TXT 파일로 업로드 해주세요",type=['pdf', 'txt'])
+st.write("___")
+
+# Before the function definition
+if uploaded_file is not None:
+    file_extension = os.path.splitext(uploaded_file.name)[1].lower()
+else:
+    file_extension = ""
+
+def file_to_document(uploaded_file):
+    # PDF 파일의 경우
+    if file_extension == '.pdf':
+        temp_dir = tempfile.TemporaryDirectory()
+        temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
+        with open(temp_filepath,"wb") as f:
+            f.write(uploaded_file.getvalue())
+        loader = PyPDFLoader(temp_filepath)
+        pages = loader.load_and_split()
+        return pages
+
+    # TXT 파일의 경우
+    elif file_extension == '.txt':
+        temp_dir = tempfile.TemporaryDirectory()
+        temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
+        with open(temp_filepath,"wb") as f:
+            f.write(uploaded_file.getvalue())
+        loader = TextLoader(temp_filepath)
+        pages = loader.load_and_split()
+        return pages
+
+    else:
+        raise ValueError("Unsupported file type. Only PDF and TXT are supported.")
+
+#업로드시 동작 코드
+if uploaded_file is not None:
+    pages = file_to_document(uploaded_file)
+
+    #Split
+    text_splitter = RecursiveCharacterTextSplitter(
+    # Set a really small chunk size, just to show.
+        chunk_size = 100,
+        chunk_overlap  = 20,
+        length_function = len,
+        is_separator_regex = False,
+    )
+    texts = text_splitter.split_documents(pages)
+
+    #Embedding
+
+    embeddings_model = OpenAIEmbeddings()
+
+    # load it into Chroma
+    db = Chroma.from_documents(texts, embeddings_model)
+else:
+    texts = "없음"
+
+
 
 # 초기 세션 상태 설정
 if 'show_questions' not in st.session_state:
@@ -28,7 +105,7 @@ description = st.text_area('상황 설명')
 
 if st.button('예상 질문 생성'):
     with st.spinner('질문 생성 중입니다...예상 10초?!'):
-        st.session_state.recomendq = chat_model.predict(person +"에 대해서" + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개와 예상 답변을 만들어줘")
+        st.session_state.recomendq = chat_model.predict(texts + "는" + person +"이 제출한 자기소개서이다." + description + "인 상황을 기반으로 1분동안 답변할만한 상대방의 질문 1개와 예상 답변을 만들어줘")
         st.session_state.show_questions = True
         st.session_state.show_answer_input = True
 
