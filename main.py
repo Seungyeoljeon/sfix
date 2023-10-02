@@ -120,7 +120,9 @@ if uploaded_file is not None:
     summary=stuff_chain.run(texts)
     st.write(summary)
     
+
     splited_summary = text_splitter.split_documents(summary)
+    
     #load it into Chroma
     data2 = Chroma.from_documents(splited_summary,embeddings_model)
 
