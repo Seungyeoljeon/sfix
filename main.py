@@ -96,10 +96,11 @@ if uploaded_file is not None:
     docs = chain.run(texts)
     
     st.write("자기소개서 요약", docs)
+    persona='docs'
 
     # load it into Chroma
     
-    data = Chroma.from_documents(documents=docs, embedding_function=chat_model)
+    data = Chroma.from_documents(documents=persona, embedding_function=chat_model)
     
     
     if st.button('자기소개서 기반 질문 생성'):
