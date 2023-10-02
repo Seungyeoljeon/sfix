@@ -19,6 +19,7 @@ from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import AgentAction, AgentFinish, LLMResult
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain.retrievers.multi_query import MultiQueryRetriever
 
 # from langchain.llms import CTransformers
 chat_model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[StreamingStdOutCallbackHandler()] )
@@ -100,12 +101,12 @@ if uploaded_file is not None:
     # load it into Chroma
     db = Chroma.from_documents(persona, embeddings_model)
 
-    question = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
+    persona_question = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
 
     if st.button('자기소개서 기반 질문 생성'):
         with st.spinner('잠시만 기다려주세요...'):
-                qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=db.as_retriever())
-                result = qa_chain({"query": question})
+                qa_chat_model = MultiQueryRetriever.from_chat_model(retriever=db.as_retriever(), chat_model=chat_model)
+                result = qa_chat_model(query = persona_question)
                 st.write(result["result"])
 
 # 초기 세션 상태 설정
