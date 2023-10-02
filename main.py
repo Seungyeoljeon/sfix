@@ -97,7 +97,7 @@ if uploaded_file is not None:
     
     st.write("자기소개서 요약", docs)
     persona=docs
-    data = Chroma.from_documents(persona,embeddings_model)
+    data = Chroma.from_documents(texts,embeddings_model)
     if st.button('자기소개서 기반 질문 생성'):
         load it into Chroma
 
