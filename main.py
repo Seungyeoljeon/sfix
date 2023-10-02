@@ -100,7 +100,7 @@ if uploaded_file is not None:
     #load it into Chroma
     data = Chroma.from_documents(texts,embeddings_model)
 
-    streamlit.header("자기소개서로 질문만들기")
+    st.header("자기소개서로 질문만들기")
 
 
     if st.button('자기소개서 기반 질문 생성'):  
