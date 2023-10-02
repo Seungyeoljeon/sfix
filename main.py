@@ -137,7 +137,7 @@ if uploaded_file is not None:
         stream_hander = StreamHandler(chat_box)
 
         # Define prompt
-        prompt_template = """아래 내용에 대한 간략한 요약을 한국어로 제공하세요:
+        prompt_template = """아래 내용에 대한 2000 자 이내 요약을 한국어로 제공하세요:
         "{text}"
         요약:"""
         prompt = PromptTemplate.from_template(prompt_template)
