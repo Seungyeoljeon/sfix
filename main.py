@@ -131,6 +131,7 @@ if uploaded_file is not None:
             self.container.markdown(self.text)
 
     #자기소개서 요약
+    
     st.header("자기소개서 요약")
     with st.spinner('잠시만 기다려주세요...'):
 
