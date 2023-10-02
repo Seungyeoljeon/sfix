@@ -18,7 +18,7 @@ from langchain.chains.summarize import load_summarize_chain
 
 
 # from langchain.llms import CTransformers
-chat_model = ChatOpenAI(model="gpt-4")
+chat_model = ChatOpenAI(model="gpt-3.5-turbo-16k")
 # llm = CTransformers(
 #     model="llama-2-7b-chat.ggmlv3.q2_K.bin",
 #     model_type="llama"
@@ -88,11 +88,14 @@ if uploaded_file is not None:
 
     embeddings_model = OpenAIEmbeddings()
 
-    # load it into Chroma
-    db = Chroma.from_documents(texts, embeddings_model)
-
+    # summury tests
     chain = load_summarize_chain(chat_model, chain_type="stuff")
-    persona = chain.run(db)
+    persona = chain.run(texts)
+
+    # load it into Chroma
+    db = Chroma.from_documents(persona, embeddings_model)
+
+    
 
     st.write('자기소개서요약', persona)
 
@@ -100,7 +103,7 @@ if uploaded_file is not None:
 
     if st.button('자기소개서 기반 질문 생성'):
         with st.spinner('잠시만 기다려주세요...'):
-            qa_chain = RetrievalQA.from_chain_type(chat_model,retriever=persona.as_retriever())
+            qa_chain = RetrievalQA.from_chain_type(chat_model,retriever=db.as_retriever())
             result = qa_chain({"query": question})
             st.write(result["result"])
 
