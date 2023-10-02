@@ -6,4 +6,7 @@ tiktoken
 pysqlite3-binary
 streamlit-extras
 chromadb
+LLMChain
+PromptTemplate
+StuffDocumentsChain
 
