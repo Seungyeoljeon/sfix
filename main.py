@@ -93,8 +93,10 @@ if uploaded_file is not None:
     chain = load_summarize_chain(chat_model)
     persona = chain.run(texts)
     st.write(persona)
+    
     # load it into Chroma
     db = Chroma.from_documents(documents=persona, embedding=embeddings_model)
+
     st.write('자기소개서요약', persona)
 
     question = "면접관 입장에서 제출된 자기소개서에 대한 질문을 만들어주세요"
