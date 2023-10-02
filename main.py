@@ -32,10 +32,9 @@ class StreamHandler(BaseCallbackHandler):
             self.text+=token
             self.container.markdown(self.text)
 
-chat_box = st.empty()
-stream_hander = StreamHandler(chat_box)
+
 # from langchain.llms import CTransformers
-chat_model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[stream_hander] )
+chat_model = ChatOpenAI(model="gpt-4", temperature=0)
 # llm = CTransformers(
 #     model="llama-2-7b-chat.ggmlv3.q2_K.bin",
 #     model_type="llama"
@@ -131,9 +130,11 @@ if uploaded_file is not None:
             self.container.markdown(self.text)
 
     #자기소개서 요약
-    
+
     st.header("자기소개서 요약")
     with st.spinner('잠시만 기다려주세요...'):
+        chat_box = st.empty()
+        stream_hander = StreamHandler(chat_box)
 
         # Define prompt
         prompt_template = """아래 내용에 대한 간략한 요약을 한국어로 제공하세요:
@@ -186,6 +187,7 @@ if st.session_state.show_answer_input:
         with st.spinner('답변 분석 중입니다...최대 1분?!'):
             chat_box = st.empty()
             stream_hander = StreamHandler(chat_box)
+            chat_model = ChatOpenAI(model_name="gpt-4", temperature=0, openai_api_key=openai_key, streaming=True, callbacks=[stream_hander])
             result = chat_model.predict("이용자가" +person + "와" + description + "을 바탕으로" + question + "에 대해" + answer + "으로 답변했습니다. 이 답변에 대해 명확성, 구조화, 적절한 길이, 문법과 언어 사용, 감정의 표현, 컨텍스트 이해, 그리고 응용 및 예시 사용의 관점에서 분석해주세요." +  "위 답변에 대해서 답변 개선 안을 보여주세요.")
             st.write('위 질문에 대한 모범 답변은?', result)
 else:
