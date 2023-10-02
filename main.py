@@ -120,8 +120,9 @@ if uploaded_file is not None:
     summary=stuff_chain.run(texts)
     st.write(summary)
     
+    splited_summary = text_splitter.split_documents(summary)
     #load it into Chroma
-    data2 = Chroma.from_documents(summary,embeddings_model)
+    data2 = Chroma.from_documents(splited_summary,embeddings_model)
 
 
     if st.button('자기소개서 기반 질문 생성'):  
