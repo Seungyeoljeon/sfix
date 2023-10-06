@@ -210,31 +210,27 @@ import streamlit as st
 
 st.title("💬 모의 면접하기")
 st.caption("🚀 스픽스 모의 면접관입니다.")
-
-# 사용자로부터 person과 description을 입력받는 코드가 필요합니다.
-person = st.text_input("자기 소개")
-description = st.text_input("상황 설명")
-
-if st.button('입력된 내용 기반 모의 면접 시작'):
+start_interview = st.button('입력된 내용 기반 모의 면접 시작')
+# 첫번째 메시지 생성
+if start_interview and "started" not in st.session_state:
     interveiwer = person + description + "위 내용을 참고해서 전문 면접관 역할을 수행한다. 답변은 한글로 한다. 이제 '안녕하세요. 면접을 시작하겠습니다.'라는 말로 면접을 바로 시작한다."
     st.session_state["messages"] = [{"role": "user", "content": interveiwer}]
-else:
-    if "messages" not in st.session_state:
-        st.session_state["messages"] = [{"role": "user", "content": "전문 면접관 역할을 수행한다. 답변은 한글로 한다. 이제 '안녕하세요. 면접을 시작하겠습니다.'라는 말로 면접을 바로 시작한다."}]
-
-# 메시지 출력
-for message in st.session_state.get("messages", []):
-    st.chat_message(message["role"]).write(message["content"])
+    st.session_state["started"] = True  # 면접 시작 상태를 저장합니다.
 
 # 사용자로부터 입력을 받습니다.
-if user_input := st.chat_input():
+if "started" in st.session_state and st.session_state["started"] and (user_input := st.chat_input()):
     st.session_state.messages.append({"role": "user", "content": user_input})
-    
     # 챗봇의 응답을 생성합니다.
-
-    response = openai.ChatCompletion.create(model="gpt-4", messages=st.session_state.messages)
-    msg = response.choices[0].message
-    st.session_state.messages.append(msg)
+    try:
+        response = openai.ChatCompletion.create(model="gpt-4", messages=st.session_state.messages)
+        msg = response.choices[0].message
+        st.session_state.messages.append(msg)
+    except Exception as e:
+        st.write("에러", str(e))
+        
+    # 메시지 출력
+    for message in st.session_state.get("messages", []):
+        st.chat_message(message["role"]).write(message["content"])
     
 
 
