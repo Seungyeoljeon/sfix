@@ -211,8 +211,12 @@ import streamlit as st
 st.title("💬 모의 면접하기")
 st.caption("🚀 스픽스 모의 면접관입니다.")
 
+
+interveiwer=person + description + "위 내용을 참고해서 전문 면접관 역할을 수행한다. 답변은 한글로 한다. 이제 '안녕하세요. 면접을 시작하겠습니다.'라는 말로 면접을 바로 시작한다."
+
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "user", "content": person + description + "위 내용을 참고해서 전문 면접관 역할을 수행한다. 답변은 한글로 한다. 이제 '안녕하세요. 면접을 시작하겠습니다.'라는 말로 면접을 바로 시작한다." }]
+    st.session_state["messages"] = [{"role": "user", "content": interveiwer}]
+
 
 # 사용자에게는 보이지 않지만, 챗봇은 이 메시지를 기반으로 응답을 생성합니다.
 response = openai.ChatCompletion.create(model="gpt-4", messages=st.session_state.messages)
@@ -221,8 +225,9 @@ st.session_state.messages.append(msg)
 
 #메시지 출력
 
-for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
+for message in st.session_state.messages:
+    st.chat_message(message["role"]).write(message["content"])
+
 
 # 사용자로부터 입력을 받습니다.
 if user_input := st.chat_input():
