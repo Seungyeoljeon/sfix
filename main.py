@@ -42,7 +42,7 @@ chat_model = ChatOpenAI(model="gpt-4", temperature=0)
 button(username="sfix", floating=True, width=221)
 
 
-st.title('AI 커뮤니케이션 코치 스픽스!')
+st.title('AI 면접 코치 스픽스!')
 st.caption('입력 예시 입니다.')
 st.caption('자기 소개 :저는 컴퓨터 공학을 전공한 신입 개발자입니다. 학교에서는 Python과 Java를 사용하여 여러 프로젝트를 진행했습니다. 또한, 오픈 소스 프로젝트에 참여하여 실제 문제를 해결하는 경험을 했습니다. 팀워크와 커뮤니케이션 능력을 중요하게 생각하며, 늘 새로운 것을 배우고 성장하려고 노력합니다.')
 st.caption('상황 설명 : 아래 채용 공고를 읽고 면접을 가는 상황입니다. 우리 회사는 역동적인 개발 팀을 구성하고 있습니다. 현재 Java와 Python을 주로 사용하는 웹 개발자를 찾고 있습니다. 필수 요건은 다음과 같습니다:')
@@ -197,7 +197,40 @@ if st.session_state.show_answer_input:
 else:
     st.write('모범답변을 받으려면 클릭')
 
+
 if st.button("리셋"):
     st.session_state.show_questions = False
     st.session_state.show_answer_input = True
     st.session_state.recomendq = ""
+
+
+import openai
+import streamlit as st
+
+
+st.title("💬 모의 면접하기")
+st.caption("🚀 스픽스 모의 면접관입니다.")
+
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [{"role": "user", "content": person + description + "위 내용을 참고해서 전문 면접관 역할을 수행한다. 답변은 한글로 한다. 이제 '안녕하세요. 면접을 시작하겠습니다.'라는 말로 면접을 바로 시작한다." }]
+
+# 사용자에게는 보이지 않지만, 챗봇은 이 메시지를 기반으로 응답을 생성합니다.
+response = openai.ChatCompletion.create(model="gpt-4", messages=st.session_state.messages)
+msg = response.choices[0].message
+st.session_state.messages.append(msg)
+
+#메시지 출력
+
+for msg in st.session_state.messages:
+    st.chat_message(msg["role"]).write(msg["content"])
+
+# 사용자로부터 입력을 받습니다.
+if user_input := st.chat_input():
+    st.session_state.messages.append({"role": "user", "content": user_input})
+
+# if prompt := st.chat_input():
+    
+#     st.session_state.messages.append({"role": "user", "content": prompt})
+#     st.chat_message("user").write(prompt)
+
+#     st.chat_message("assistant").write(msg.content)
