@@ -217,7 +217,6 @@ interveiwer=person + description + "위 내용을 참고해서 전문 면접관 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "user", "content": interveiwer}]
 
-
 # 사용자로부터 입력을 받습니다.
 if user_input := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": user_input})
