@@ -211,11 +211,16 @@ import streamlit as st
 st.title("💬 모의 면접하기")
 st.caption("🚀 스픽스 모의 면접관입니다.")
 start_interview = st.button('입력된 내용 기반 모의 면접 시작')
+
+
 # 첫번째 메시지 생성
-if start_interview and "started" not in st.session_state:
-    interveiwer = person + description + "위 내용을 참고해서 전문 면접관 역할을 수행한다. 답변은 한글로 한다. 이제 '안녕하세요. 면접을 시작하겠습니다.'라는 말로 면접을 바로 시작한다."
-    st.session_state["messages"] = [{"role": "user", "content": interveiwer}]
-    st.session_state["started"] = True  # 면접 시작 상태를 저장합니다.
+if start_interview:
+    if not person or not description:  # person과 description이 비어있는지 확인
+        st.warning("자기 소개와 상황 설명을 모두 입력해주세요.")
+    else:
+        interviewer = person + description + "위 내용을 참고해서 전문 면접관 역할을 수행한다. 답변은 한글로 한다. 질문은 한번에 한 가지만 진행한다. 답변자의 응답에  기반하여 추가 질문을 1회 진행한다. 이제 '안녕하세요. 면접을 시작하겠습니다.'라는 말로 면접을 바로 시작한다."
+        st.session_state["messages"] = [{"role": "user", "content": interviewer}]
+        st.session_state["started"] = True  # 면접 시작 상태를 저장합니다.
 
         # 챗봇의 응답을 생성합니다.
     try:
@@ -229,17 +234,24 @@ if "started" in st.session_state and st.session_state["started"]:
     for message in st.session_state.get("messages", [])[1:]:  # 첫 번째 메시지를 건너뜁니다.
         st.chat_message(message["role"]).write(message["content"])
 
-    # 사용자로부터 입력을 받습니다.
-    if user_input := st.chat_input():
-        st.session_state.messages.append({"role": "user", "content": user_input})
+# 사용자로부터 입력을 받습니다.
+if user_input := st.chat_input():
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    
+    # 챗봇의 응답을 생성합니다.
+    try:
+        response = openai.ChatCompletion.create(model="gpt-4", messages=st.session_state.messages)
+        msg = response.choices[0].message
+        st.session_state.messages.append(msg)
         
-        # 챗봇의 응답을 생성합니다.
-        try:
-            response = openai.ChatCompletion.create(model="gpt-4", messages=st.session_state.messages)
-            msg = response.choices[0].message
-            st.session_state.messages.append(msg)
-        except Exception as e:
-            st.write("에러", str(e))
+        # 챗봇의 응답 메시지 출력
+        st.chat_message(msg["role"]).write(msg["content"])
+    except Exception as e:
+        st.write("에러", str(e))
+
+# 기존의 메시지 출력 (챗봇의 최신 응답 제외)
+for message in st.session_state.get("messages", [])[:-1]:  
+    st.chat_message(message["role"]).write(message["content"])
         
 
 
