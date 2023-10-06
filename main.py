@@ -98,7 +98,7 @@ def file_to_document(uploaded_file):
 
 #업로드시 동작 코드
 
-if st.button('자기소개서 기반 질문 생성'):
+if st.button('자기소개서 기반 질문 생성')
     with st.spinner('잠시만 기다려주세요...'):
         if uploaded_file is not None:
             pages = file_to_document(uploaded_file)
@@ -155,15 +155,28 @@ if st.button('자기소개서 기반 질문 생성'):
             # Define StuffDocumentsChain
             stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
             summary=stuff_chain.run(texts)
-                    
-
-            personaq ="위 자기소개서 요약을 읽고 면접관 입장에서 지원자에 대한 질문을 만들어주세요"
-            qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
-            result = qa_chain({"query" : summary + personaq})
-            st.write(result["result"])
         else:
             st.warning("자기소개서를 업로드해주세요")
+        st.session_state['summary'] = stuff_chain.run(texts)
 
+
+if 'summary' in st.session_state:
+    st.subheader("자기소개서 요약")
+    st.write(st.session_state['summary'])
+                    
+if st.button('자기소개서 기반 질문 생성'):
+    if 'summary' in st.session_state:
+        personaq ="위 자기소개서 요약을 읽고 면접관 입장에서 지원자에 대한 질문을 만들어주세요"
+        qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
+        result = qa_chain({"query" : summary + personaq})
+        st.write(result["result"])
+        st.session_state['persnoalquestion'] = result(st.session_state['summary'])  # Store in session_state
+    else:
+        st.warning("자기소개서 요약을 먼저 실행해주세요")
+
+if 'persnoalquestion' in st.session_state:
+    st.subheader("생성된 질문:")
+    st.write(st.session_state['persnoalquestion'])
 
 
 col1, col2 = st.columns(2)
