@@ -234,24 +234,17 @@ if "started" in st.session_state and st.session_state["started"]:
     for message in st.session_state.get("messages", [])[1:]:  # 첫 번째 메시지를 건너뜁니다.
         st.chat_message(message["role"]).write(message["content"])
 
-# 사용자로부터 입력을 받습니다.
-if user_input := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    
-    # 챗봇의 응답을 생성합니다.
-    try:
-        response = openai.ChatCompletion.create(model="gpt-4", messages=st.session_state.messages)
-        msg = response.choices[0].message
-        st.session_state.messages.append(msg)
+    # 사용자로부터 입력을 받습니다.
+    if user_input := st.chat_input():
+        st.session_state.messages.append({"role": "user", "content": user_input})
         
-        # 챗봇의 응답 메시지 출력
-        st.chat_message(msg["role"]).write(msg["content"])
-    except Exception as e:
-        st.write("에러", str(e))
-
-# 기존의 메시지 출력 (챗봇의 최신 응답 제외)
-for message in st.session_state.get("messages", [])[:-1]:  
-    st.chat_message(message["role"]).write(message["content"])
+        # 챗봇의 응답을 생성합니다.
+        try:
+            response = openai.ChatCompletion.create(model="gpt-4", messages=st.session_state.messages)
+            msg = response.choices[0].message
+            st.session_state.messages.append(msg)
+        except Exception as e:
+            st.write("에러", str(e))
         
 
 
