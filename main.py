@@ -43,7 +43,7 @@ button(username="sfix", floating=True, width=221)
 
 with st.sidebar:
     
-    "[AI커뮤니케이션 코치 스픽스와 함께 스피치  모임 하기](https://open.kakao.com/o/ghKHP4If)"
+    
 
 
 st.title('AI 커뮤니케이션 코치 스픽스!')
@@ -95,7 +95,7 @@ def file_to_document(uploaded_file):
         return pages
 
     else:
-        raise ValueError("Unsupported file type. Only PDF and TXT are supported.")
+        raise ValueError("PDF, TXT만 가능합니다..")
 
 #업로드시 동작 코드
 if st.button('자기소개서 기반 질문 생성'):
@@ -161,6 +161,7 @@ if st.button('자기소개서 기반 질문 생성'):
             qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
             result = qa_chain({"query" : summary + personaq})
             st.write(result["result"])
+            st.write("[AI커뮤니케이션 코치 스픽스와 함께 스피치  모임 하기](https://open.kakao.com/o/ghKHP4If)")
         else:
             st.warning("자기소개서를 업로드해주세요")
 
