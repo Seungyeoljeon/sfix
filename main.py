@@ -97,77 +97,81 @@ def file_to_document(uploaded_file):
         raise ValueError("Unsupported file type. Only PDF and TXT are supported.")
 
 #업로드시 동작 코드
-if uploaded_file is not None:
-    pages = file_to_document(uploaded_file)
 
-    #Split
-    text_splitter = RecursiveCharacterTextSplitter(
-    # Set a really small chunk size, just to show.
-        chunk_size = 100,
-        chunk_overlap  = 20,
-        length_function = len,
-        is_separator_regex = False,
-    )
-    texts = text_splitter.split_documents(pages)
-
-    #Embedding
-
-    embeddings_model = OpenAIEmbeddings()
-    
-   
-    #load it into Chroma
-    data = Chroma.from_documents(texts,embeddings_model)
-
-    # # summurize texts
-    # chain = load_summarize_chain(chat_model, chain_type="stuff")
-    # docs = chain.run(texts)
-
-    #Stream 받아 줄 Hander 만들기
-    from langchain.callbacks.base import BaseCallbackHandler
-    class StreamHandler(BaseCallbackHandler):
-        def __init__(self, container, initial_text=""):
-            self.container = container
-            self.text=initial_text
-        def on_llm_new_token(self, token: str, **kwargs) -> None:
-            self.text+=token
-            self.container.markdown(self.text)
-
-    #자기소개서 요약
-
-    st.header("자기소개서 요약")
+if st.button('자기소개서 기반 질문 생성')
     with st.spinner('잠시만 기다려주세요...'):
-        chat_box = st.empty()
-        stream_hander = StreamHandler(chat_box)
+        if uploaded_file is not None:
+            pages = file_to_document(uploaded_file)
 
-        # Define prompt
-        prompt_template = """아래 내용에 대한 2000 자 이내 요약을 한국어로 제공하세요:
-        "{text}"
-        요약:"""
-        prompt = PromptTemplate.from_template(prompt_template)
+            #Split
+            text_splitter = RecursiveCharacterTextSplitter(
+            # Set a really small chunk size, just to show.
+                chunk_size = 100,
+                chunk_overlap  = 20,
+                length_function = len,
+                is_separator_regex = False,
+            )
+            texts = text_splitter.split_documents(pages)
 
-        # Define LLM chain
-        llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k", streaming=True, callbacks=[stream_hander])
-        llm_chain = LLMChain(llm=llm, prompt=prompt)
+            #Embedding
 
-        # Define StuffDocumentsChain
-        stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
-        summary=stuff_chain.run(texts)
-                
+            embeddings_model = OpenAIEmbeddings()
+            
+        
+            #load it into Chroma
+            data = Chroma.from_documents(texts,embeddings_model)
 
-        if st.button('자기소개서 기반 질문 생성'):  
+            # # summurize texts
+            # chain = load_summarize_chain(chat_model, chain_type="stuff")
+            # docs = chain.run(texts)
 
-            with st.spinner('잠시만 기다려주세요...'):
-                    personaq ="위 자기소개서 요약을 읽고 면접관 입장에서 지원자에 대한 질문을 만들어주세요"
-                    qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
-                    result = qa_chain({"query" : summary + personaq})
-                    st.write(result["result"])
+            #Stream 받아 줄 Hander 만들기
+            from langchain.callbacks.base import BaseCallbackHandler
+            class StreamHandler(BaseCallbackHandler):
+                def __init__(self, container, initial_text=""):
+                    self.container = container
+                    self.text=initial_text
+                def on_llm_new_token(self, token: str, **kwargs) -> None:
+                    self.text+=token
+                    self.container.markdown(self.text)
+
+            #자기소개서 요약
+
+            st.header("자기소개서 요약")
+
+            chat_box = st.empty()
+            stream_hander = StreamHandler(chat_box)
+
+            # Define prompt
+            prompt_template = """아래 내용에 대한 2000 자 이내 요약을 한국어로 제공하세요:
+            "{text}"
+            요약:"""
+            prompt = PromptTemplate.from_template(prompt_template)
+
+            # Define LLM chain
+            llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k", streaming=True, callbacks=[stream_hander])
+            llm_chain = LLMChain(llm=llm, prompt=prompt)
+
+            # Define StuffDocumentsChain
+            stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
+            summary=stuff_chain.run(texts)
+                    
+
+            personaq ="위 자기소개서 요약을 읽고 면접관 입장에서 지원자에 대한 질문을 만들어주세요"
+            qa_chain = RetrievalQA.from_chain_type(chat_model, retriever=data.as_retriever())
+            result = qa_chain({"query" : summary + personaq})
+            st.write(result["result"])
+        else:
+            st.warning("자기소개서를 업로드해주세요")
 
 
 
+col1, col2 = st.columns(2)
+with col1:
+    person = st.text_area('자기 소개', help='자기소개를 업로드하지 않으셨다면 여기에 간단하게 적어주세요.')
 
-
-person = st.text_area('자기 소개')
-description = st.text_area('상황 설명')
+with col2:
+    description = st.text_area('상황 설명', help='어떤 상황인지 설명해주세요')
 
 
 if st.button('예상 질문 생성'):
