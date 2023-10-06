@@ -98,7 +98,7 @@ def file_to_document(uploaded_file):
 
 #업로드시 동작 코드
 
-if st.button('자기소개서 기반 질문 생성')
+if st.button('자기소개서 기반 질문 생성'):
     with st.spinner('잠시만 기다려주세요...'):
         if uploaded_file is not None:
             pages = file_to_document(uploaded_file)
