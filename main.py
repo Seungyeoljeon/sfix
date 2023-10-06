@@ -55,6 +55,9 @@ if 'show_answer_input' not in st.session_state:
     st.session_state.show_answer_input = True
 if 'recomendq' not in st.session_state:
     st.session_state.recomendq = "기본 예상 질문" #초기값
+if 'uploaded_file' not in st.session_state:
+    st.session_state.uploaded_file = True
+
 
 #제목
 st.write("자기소개서 업로드시 상세한 분석이 가능합니다.")
@@ -196,3 +199,4 @@ if st.button("리셋"):
     st.session_state.show_questions = False
     st.session_state.show_answer_input = True
     st.session_state.recomendq = ""
+    st.session_state.uploaded_file = True
