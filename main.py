@@ -41,10 +41,6 @@ chat_model = ChatOpenAI(model="gpt-4", temperature=0)
 # )
 button(username="sfix", floating=True, width=221)
 
-with st.sidebar:
-    
-    
-
 
 st.title('AI 커뮤니케이션 코치 스픽스!')
 st.caption('입력 예시 입니다.')
