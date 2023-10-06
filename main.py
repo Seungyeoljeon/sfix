@@ -218,7 +218,7 @@ if st.button('입력된 내용 기반 모의 면접 시작'):
         st.session_state["messages"] = [{"role": "user", "content": interveiwer}]
 else : 
     if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "user", "content": "전문 면접관 역할을 수행한다. 답변은 한글로 한다. 이제 '안녕하세요. 면접을 시작하겠습니다.'라는 말로 면접을 바로 시작한다."}]
+        st.session_state["messages"] = [{"role": "user", "content": "전문 면접관 역할을 수행한다. 답변은 한글로 한다. 이제 '안녕하세요. 면접을 시작하겠습니다.'라는 말로 면접을 바로 시작한다."}]
 
 # 사용자로부터 입력을 받습니다.
 if user_input := st.chat_input():
